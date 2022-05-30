@@ -1,0 +1,78 @@
+<div class="contents">
+
+  <h1 class="header">Investo DashBoard </h1>
+
+  <div fxLayout style="margin-left: 2.5%">
+    <h3>Click here to fetch the details - &nbsp;&nbsp;</h3> <button class="button" (click)="fetch()" color="primary"
+      matTooltip="Fetch Clients Data" mat-raised-button>Fetch</button>
+  </div>
+
+
+  <mat-tab-group *ngIf="clients.length > 0" [selectedIndex]="selected.value" (selectedTabChange)="tabChanged($event)"
+    dynamicHeight>
+    <mat-tab *ngFor="let tab of clients; let index = index" [label]="tab">
+      <div style="padding-left: 10%;">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <ng-container matColumnDef="stockName">
+            <th mat-header-cell *matHeaderCellDef> Stock Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.stockName}} </td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantityPurchased}} </td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="purchaseDate">
+            <th mat-header-cell *matHeaderCellDef> Purchase Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.purchaseDate | date: 'MM/dd/yyyy'}} </td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="purchasePrice">
+            <th mat-header-cell *matHeaderCellDef> Purchase Price </th>
+            <td mat-cell *matCellDef="let element"> {{element.stockPurchasePrice}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="currentPrice">
+            <th mat-header-cell *matHeaderCellDef> Current Price </th>
+            <td mat-cell *matCellDef="let element"> {{element.stockCurrentPrice}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="originalHoldingValue">
+            <th mat-header-cell *matHeaderCellDef> Initial Holding Value </th>
+            <td mat-cell *matCellDef="let element"> {{calculateHolding(element.stockPurchasePrice ,
+              element.quantityPurchased )}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="currentHoldingvalue">
+            <th mat-header-cell *matHeaderCellDef> Current Holding Value </th>
+            <td mat-cell *matCellDef="let element"> {{calculateHolding(element.stockCurrentPrice ,
+              element.quantityPurchased )}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="percentagePL">
+            <th mat-header-cell *matHeaderCellDef> P/L % </th>
+            <td mat-cell *matCellDef="let element"> {{calculatePL(element.stockPurchasePrice, element.stockCurrentPrice
+              , element.quantityPurchased )}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+
+</div>
+
+<ng-container *ngIf="showProcessingFlag">
+  <div class="progressContainer">
+    <mat-progress-spinner [diameter]="65" color="primary" mode="indeterminate" >
+    </mat-progress-spinner>
+  </div>
+</ng-container>
